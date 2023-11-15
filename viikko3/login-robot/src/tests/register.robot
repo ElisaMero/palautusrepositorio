@@ -27,6 +27,7 @@ Register With Valid Username And Long Enough Password Containing Only Letters
     Input Credentials  helloooo  kkjglsoigushdjfils
     Output Should Contain  Password must contain letters and numbers
 
+
 *** Keywords ***
 Input New Command And Create User
     Input New Command 
