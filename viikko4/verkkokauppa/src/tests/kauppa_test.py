@@ -218,3 +218,4 @@ class TestKauppa(unittest.TestCase):
 # muutos 1
 # muutos 2
 # muutos 3
+# vika muutos
