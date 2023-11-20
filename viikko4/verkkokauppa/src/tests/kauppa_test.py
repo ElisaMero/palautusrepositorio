@@ -217,3 +217,4 @@ class TestKauppa(unittest.TestCase):
             "pekka", 42, "12345", "33333-44455", 0)
 # muutos 1
 # muutos 2
+# muutos 3
