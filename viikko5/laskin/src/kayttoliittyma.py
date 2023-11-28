@@ -13,6 +13,21 @@ class Kayttoliittyma:
     def __init__(self, sovellus, root):
         self._sovellus = sovellus
         self._root = root
+        self.arvo = 0
+        self._komennot = {
+            Komento.SUMMA: self._sovellus.plus,
+            Komento.EROTUS: self._sovellus.miinus,
+            Komento.NOLLAUS: self._sovellus.nollaa,
+            Komento.KUMOA: self._sovellus.kumoa
+        }
+
+    def _lue_syote(self):
+        arvo = 0
+        try:
+            arvo = int(self._syote_kentta.get())
+        except Exception:
+            pass
+        return arvo
 
     def kaynnista(self):
         self._arvo_var = StringVar()
@@ -48,33 +63,23 @@ class Kayttoliittyma:
         )
 
         tulos_teksti.grid(columnspan=4)
-        self._syote_kentta.grid(columnspan=4, sticky=(constants.E, constants.W))
+        self._syote_kentta.grid(
+            columnspan=4, sticky=(constants.E, constants.W))
         summa_painike.grid(row=2, column=0)
         erotus_painike.grid(row=2, column=1)
         self._nollaus_painike.grid(row=2, column=2)
         self._kumoa_painike.grid(row=2, column=3)
 
     def _suorita_komento(self, komento):
-        arvo = 0
+        arvo = self._lue_syote()
 
-        try:
-            arvo = int(self._syote_kentta.get())
-        except Exception:
-            pass
-
-        if komento == Komento.SUMMA:
-            self._sovellus.plus(arvo)
-        elif komento == Komento.EROTUS:
-            self._sovellus.miinus(arvo)
-        elif komento == Komento.NOLLAUS:
-            self._sovellus.nollaa()
-        elif komento == Komento.KUMOA:
-            pass
+        toiminta = self._komennot.get(komento, lambda x: x)
+        toiminta(arvo)
 
         self._kumoa_painike["state"] = constants.NORMAL
 
         if self._sovellus.arvo() == 0:
-            self._nollaus_painike["state"] = constants.DISABLED
+            self._nollaus_painike["state"] = constants.NORMAL
         else:
             self._nollaus_painike["state"] = constants.NORMAL
 
