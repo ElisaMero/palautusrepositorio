@@ -7,27 +7,26 @@ class IntJoukko:
     def _luo_lista(self, koko):
         return [0] * koko
 
-    def __init__(self, kapasiteetti=None, kasvatuskoko=None):
-        if kapasiteetti is None:
-            self.kapasiteetti = KAPASITEETTI
-        elif not isinstance(kapasiteetti, int) or kapasiteetti < 0:
+    def __init__(self, kapasiteetti=KAPASITEETTI, kasvatuskoko=OLETUSKASVATUS):
+
+        if not isinstance(kapasiteetti, int) or kapasiteetti < 0:
             raise Exception("Väärä kapasiteetti")
         else:
             self.kapasiteetti = kapasiteetti
 
-        if kasvatuskoko is None:
-            self.kasvatuskoko = OLETUSKASVATUS
+        if not isinstance(kasvatuskoko, int) or kasvatuskoko < 0:
+            raise Exception("Väärä kasvatuskoko")
         else:
             self.kasvatuskoko = kasvatuskoko
 
-        self.ljono = self._luo_lista(self.kapasiteetti)
+        self.lista = self._luo_lista(self.kapasiteetti)
         self.alkioiden_lkm = 0
 
     def kuuluu(self, n):
         tarkistaja = 0
 
         for i in range(0, self.alkioiden_lkm):
-            if n == self.ljono[i]:
+            if n == self.lista[i]:
                 tarkistaja = tarkistaja + 1
         if tarkistaja > 0:
             return True
@@ -35,7 +34,7 @@ class IntJoukko:
 
     def lisaa(self, n):
         if self.alkioiden_lkm == 0:
-            self.ljono[0] = n
+            self.lista[0] = n
             self.alkioiden_lkm = self.alkioiden_lkm + 1
             return True
         if not self.kuuluu(n):
@@ -44,14 +43,14 @@ class IntJoukko:
         return False
 
     def lisaa2(self, n):
-        self.ljono[self.alkioiden_lkm] = n
+        self.lista[self.alkioiden_lkm] = n
         self.alkioiden_lkm = self.alkioiden_lkm + 1
-        if self.alkioiden_lkm % len(self.ljono) == 0:
-            taulukko_old = self.ljono
-            self.kopioi_lista(self.ljono, taulukko_old)
-            self.ljono = self._luo_lista(
+        if self.alkioiden_lkm % len(self.lista) == 0:
+            taulukko_old = self.lista
+            self.kopioi_lista(self.lista, taulukko_old)
+            self.lista = self._luo_lista(
                 self.alkioiden_lkm + self.kasvatuskoko)
-            self.kopioi_lista(taulukko_old, self.ljono)
+            self.kopioi_lista(taulukko_old, self.lista)
         return True
 
     def poista(self, n):
@@ -59,9 +58,9 @@ class IntJoukko:
         apumuuttuja = 0
 
         for i in range(0, self.alkioiden_lkm):
-            if n == self.ljono[i]:
+            if n == self.lista[i]:
                 kohta = i
-                self.ljono[kohta] = 0
+                self.lista[kohta] = 0
                 break
         if kohta != -1:
             self.poista2(kohta, apumuuttuja)
@@ -70,9 +69,9 @@ class IntJoukko:
 
     def poista2(self, kohta, apumuuttuja):
         for j in range(kohta, self.alkioiden_lkm - 1):
-            apumuuttuja = self.ljono[j]
-            self.ljono[j] = self.ljono[j + 1]
-            self.ljono[j + 1] = apumuuttuja
+            apumuuttuja = self.lista[j]
+            self.lista[j] = self.lista[j + 1]
+            self.lista[j + 1] = apumuuttuja
 
         self.alkioiden_lkm = self.alkioiden_lkm - 1
         return True
@@ -87,7 +86,7 @@ class IntJoukko:
     def to_int_list(self):
         taulu = self._luo_lista(self.alkioiden_lkm)
         for i in range(0, len(taulu)):
-            taulu[i] = self.ljono[i]
+            taulu[i] = self.lista[i]
         return taulu
 
     @staticmethod
@@ -132,10 +131,10 @@ class IntJoukko:
         if self.alkioiden_lkm == 0:
             return "{}"
         elif self.alkioiden_lkm == 1:
-            return "{" + str(self.ljono[0]) + "}"
+            return "{" + str(self.lista[0]) + "}"
         else:
             tuotos = "{"
             for i in range(0, self.alkioiden_lkm - 1):
-                tuotos = tuotos + str(self.ljono[i]) + ", "
-            tuotos = tuotos + str(self.ljono[self.alkioiden_lkm - 1]) + "}"
+                tuotos = tuotos + str(self.lista[i]) + ", "
+            tuotos = tuotos + str(self.lista[self.alkioiden_lkm - 1]) + "}"
             return tuotos
