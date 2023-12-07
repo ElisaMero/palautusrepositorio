@@ -1,21 +1,25 @@
-class QueryBuilder:
-    def __init__(self, *matchers):
-        self._matchers = matchers
+from matchers import All, And, PlaysIn, HasFewerThan, HasAtLeast, Or
 
-    def test(self, player):
-        for matcher in self._matchers:
-            if not matcher.test(player):
-                return False
-        return True
+
+class QueryBuilder:
+    def __init__(self, query=All()):
+        self.query = query
 
     def build(self):
-        return
+        return self.query
 
     def playsIn(self, field):
-        pass
+        values = And(self.query, PlaysIn(field))
+        return QueryBuilder(values)
 
-    def hasAtLeast(self, value, goal):
-        pass
+    def hasAtLeast(self, value, attr):
+        values = And(self.query, HasAtLeast(value, attr))
+        return QueryBuilder(values)
 
-    def hasFewerThan(self):
-        pass
+    def hasFewerThan(self, value, attr):
+        values = And(self.query, HasFewerThan(value, attr))
+        return QueryBuilder(values)
+
+    def oneOf(self, *matchers):
+        values = Or(*matchers)
+        return QueryBuilder(values)
